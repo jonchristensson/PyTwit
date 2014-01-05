@@ -37,7 +37,7 @@ c = conn.cursor()
 c.execute("DROP TABLE IF EXISTS Cox_tweet")
 
 # # Create table
-c.execute('''create table IF NOT EXISTS Cox_tweet
+c.execute('''create table IF NOT EXISTS Cox_tweet_test
 (
 time_key timestamp
 , create_dt timestamp
@@ -46,8 +46,8 @@ time_key timestamp
 , Tweet text
 )''')
 
-c.execute("SELECT name FROM sqlite_master WHERE type='table';")
-print(c.fetchall())
+# c.execute("SELECT name FROM sqlite_master WHERE type='table';")
+# print(c.fetchall())
 ##################################################################
 
 
@@ -56,7 +56,7 @@ cj = http.cookiejar.CookieJar()
 opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
 opener.addheaders = [('User-agent', 'Mozilla/5.0'), ('Accept-Language', 'en-US')]
 
-keyword = 'obama'
+keyword = '@coxcomm'
 startinglink = 'https:/twitter.com/search/realtime?q='
 
 def main():
@@ -69,11 +69,13 @@ def main():
 
     howSimAr = [0.5, 0.5, 0.5, 0.5, 0.5] #less numbers, the more reactive
 
-    #while 1 < 2:
-    for i in range(0,2):
+    while 1 < 2:
+    # for i in range(0,20):
         try:
             print('#######')
-            print('loop',i)
+            print(datetime.datetime.now())
+
+            # print('loop',i)
             allCreate_dt = []
             allTimeKey = []
             allFullNM = []
@@ -186,13 +188,13 @@ def main():
             #Use function created earlier to grab only new tweets
             uniqueList = unique_list(NewlistOfListAppend,OldlistOfListAppend)
             # print(uniqueList)
-            print('length of unique list (all)',len(uniqueList))
+            # print('length of unique list (all)',len(uniqueList))
 
 ###########################################################################
             #Use function to add data to DB
-            print(len(uniqueList))
+
             for j in range(0,len(uniqueList)):
-            	c.execute('INSERT INTO Cox_tweet(time_key, create_dt , User_ID, Nick_NM, Tweet) VALUES(? ,?, ?, ?, ?)', (uniqueList[j][2],uniqueList[j][3],uniqueList[j][0], str(uniqueList[j][1]),uniqueList[j][4]))
+            	c.execute('INSERT INTO Cox_tweet_test(time_key, create_dt , User_ID, Nick_NM, Tweet) VALUES(? ,?, ?, ?, ?)', (uniqueList[j][2],uniqueList[j][3],uniqueList[j][0], str(uniqueList[j][1]),uniqueList[j][4]))
  				
             	# c.execute('INSERT INTO Cox_tweet(time_key, create_dt, User_ID, Nick_NM, Tweet) VALUES(?,?,?,?,? )', (uniqueList[j][2] , uniqueList[j][3] , uniqueList[j][0],uniqueList[j][1],uniqueList[j][4], ))
  				#add rows to table
@@ -223,7 +225,7 @@ def main():
             newTwit = []
             NewlistOfListAppend=[]
 
-            time.sleep(waitMultiplier*10)                
+            time.sleep(waitMultiplier*300)                
         
         except Exception as e:
                                 print(str(e))
@@ -243,8 +245,8 @@ def main():
 
 main()
 #c.execute("DROP TABLE IF EXISTS Cox_tweet")
-c.execute("SELECT * FROM Cox_tweet")
-print(c.fetchall())
+# c.execute("SELECT * FROM Cox_tweet")
+# print(c.fetchall())
 
 # drop specific table in Tweet.db
 # c.execute("DROP TABLE IF EXISTS Cox_tweet")
