@@ -233,7 +233,7 @@ def main():
             oldTwit = []
             uniqueList=[]
 
-            
+
             for eachItem in newTwit:
                     oldTwit.append(eachItem)
             for eachItem in NewlistOfListAppend:
@@ -244,7 +244,7 @@ def main():
             newTwit = []
             NewlistOfListAppend=[]
 
-            time.sleep(waitMultiplier*20)                
+            time.sleep(waitMultiplier*900)                
         
         except Exception as e:
                                 print(str(e))
