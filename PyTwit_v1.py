@@ -78,7 +78,7 @@ def main():
     
     # print(create_dt)
 
-    howSimAr = [0.5, 0.5, 0.5, 0.5, 0.5] #less numbers, the more reactive
+    howSimAr = [0.5, 0.5, 0.5] #less numbers, the more reactive
 
     while 1 < 2:
     # for i in range(0,20):
@@ -225,7 +225,7 @@ def main():
             print(c.fetchall())
             print('length of unique list:',len(uniqueList))
 
-            c.execute("SELECT * FROM cox_tweet_load")
+            c.execute("SELECT count(*) FROM cox_tweet_load")
             print(c.fetchall())
 
 
@@ -245,7 +245,7 @@ def main():
             newTwit = []
             NewlistOfListAppend=[]
 
-            time.sleep(waitMultiplier*20)                
+            time.sleep(waitMultiplier*900)                
         
         except Exception as e:
                                 print(str(e))
