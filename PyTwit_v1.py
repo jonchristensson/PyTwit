@@ -16,6 +16,7 @@ import sqlite3
 import datetime
 #from datetime import datetime
 
+
 ### Function to find unique list of list between new and old
 def unique_list(newL,oldL):
         outputL=[]
@@ -34,13 +35,12 @@ c = conn.cursor()
 
 
 #drop specific table in Tweet.db
-c.execute("DROP TABLE IF EXISTS Cox_tweet")
+c.execute("DROP TABLE IF EXISTS cox_tweet_test2")
 
 # # Create table
-c.execute('''create table IF NOT EXISTS Cox_tweet_test
+c.execute('''create table IF NOT EXISTS cox_tweet_test2
 (
 time_key timestamp
-, create_dt timestamp
 , User_ID integer
 , Nick_NM text
 , Tweet text
@@ -76,7 +76,6 @@ def main():
             print(datetime.datetime.now())
 
             # print('loop',i)
-            allCreate_dt = []
             allTimeKey = []
             allFullNM = []
             allNickNM = []
@@ -140,15 +139,14 @@ def main():
 
                     allUserID.append(splitSourceUserID)
                     allNickNM.append(splitSourceName)
-                    allCreate_dt.append(create_dt)
                     allTimeKey.append(time_key)
                     allsplitSourceTop.append(splitSourceTop)
 
             for i in range(0,len(newTwit)):
     
-                    listOfList=[allUserID[i],allNickNM[i],allTimeKey[i],allCreate_dt[i],newTwit[i], allsplitSourceTop[i]]
+                    listOfList=[allUserID[i],allNickNM[i],allTimeKey[i],newTwit[i], allsplitSourceTop[i]]
                     
-                    if listOfList[5] ==['badge-top']:
+                    if listOfList[4] ==['badge-top']:
                             delLength=len(NewlistOfListAppend)+1        #get location of top-badge to delete later
                             print('badge top exist')
                     else:
@@ -164,7 +162,6 @@ def main():
                     del allUserID[delLength-1]
                     del allNickNM[delLength-1]
                     del allTimeKey[delLength-1]
-                    del allCreate_dt[delLength-1]
                     del newTwit[delLength-1]        #delete the tweet of the 'top tweet' - the one with badge top on.
                     del allsplitSourceTop[delLength-1]
                     print('badge top deleted')
@@ -177,33 +174,30 @@ def main():
             howSim = comparison.ratio()
             #print('###########')
             print("This selection is ",howSim,"similar to the past")
-            # print('new tweets',newTwit)
-            # print('old tweets',oldTwit)
+            print('new tweets',newTwit)
+            print('old tweets',oldTwit)
             howSimAr.append(howSim)
             howSimAr.remove(howSimAr[0])
             print(howSimAr)
 
             waitMultiplier = (sum(howSimAr)/len(howSimAr))
 
+            print('newlist:',NewlistOfListAppend)
+            print('oldlist:',OldlistOfListAppend)
+
             #Use function created earlier to grab only new tweets
             uniqueList = unique_list(NewlistOfListAppend,OldlistOfListAppend)
             # print(uniqueList)
-            # print('length of unique list (all)',len(uniqueList))
+            print('length of unique list (all)',len(uniqueList))
 
 ###########################################################################
             #Use function to add data to DB
 
             for j in range(0,len(uniqueList)):
-            	c.execute('INSERT INTO Cox_tweet_test(time_key, create_dt , User_ID, Nick_NM, Tweet) VALUES(? ,?, ?, ?, ?)', (uniqueList[j][2],uniqueList[j][3],uniqueList[j][0], str(uniqueList[j][1]),uniqueList[j][4]))
- 				
-            	# c.execute('INSERT INTO Cox_tweet(time_key, create_dt, User_ID, Nick_NM, Tweet) VALUES(?,?,?,?,? )', (uniqueList[j][2] , uniqueList[j][3] , uniqueList[j][0],uniqueList[j][1],uniqueList[j][4], ))
- 				#add rows to table
-				# time_key - 2
-				# create_dt - 3
-				# User_ID - 0
-				# Nick_NM - 1
-				# Tweet - 4
-				#c.execute('''INSERT INTO Cox_tweet(time_key, create_dt, User_ID, Nick_NM, Tweet ) VALUES(?,?)''', (uniqueList[j][3],uniqueList[j][4],uniqueList[j][1],uniqueList[j][2],uniqueList[j][5]))
+            	c.execute('INSERT INTO cox_tweet_test2(time_key, User_ID, Nick_NM, Tweet) VALUES(? , ?, ?, ?)', (uniqueList[j][2],uniqueList[j][0], str(uniqueList[j][1]),uniqueList[j][3]))
+            	# Save (commit) the changes
+            	conn.commit()
+
 
 			# c.execute("SELECT count(time_key) FROM Cox_tweet")
 			# print(c.fetchall())
@@ -212,20 +206,27 @@ def main():
 			#c.execute("DROP TABLE IF EXISTS Cox_tweet")
 
 #############################################################################
+            c.execute("SELECT count(*) FROM cox_tweet_test2")
+            print(c.fetchall())
+            print('length of unique list:',len(uniqueList))
 
             OldlistOfListAppend=[]
-            oldTwit = []
-            uniqueList=[]
+
+
+
+
+
             for eachItem in newTwit:
                     oldTwit.append(eachItem)
             for eachItem in NewlistOfListAppend:
                     OldlistOfListAppend.append(eachItem)
 
-
+            oldTwit = []
+            uniqueList=[]
             newTwit = []
             NewlistOfListAppend=[]
 
-            time.sleep(waitMultiplier*300)                
+            time.sleep(waitMultiplier*20)                
         
         except Exception as e:
                                 print(str(e))
