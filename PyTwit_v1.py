@@ -161,7 +161,7 @@ def main():
                             delLength=len(NewlistOfListAppend)+1        #get location of top-badge to delete later
                             print('badge top exist')
                     else:
-                            #print('badge top does not exist')
+                            # print('badge top does not exist')
                             delLength=0
                     
                     #print(listOfList[6])
@@ -230,22 +230,21 @@ def main():
 
 
             OldlistOfListAppend=[]
+            oldTwit = []
+            uniqueList=[]
 
-
-
-
-
+            
             for eachItem in newTwit:
                     oldTwit.append(eachItem)
             for eachItem in NewlistOfListAppend:
                     OldlistOfListAppend.append(eachItem)
 
-            oldTwit = []
-            uniqueList=[]
+            
+
             newTwit = []
             NewlistOfListAppend=[]
 
-            time.sleep(waitMultiplier*900)                
+            time.sleep(waitMultiplier*20)                
         
         except Exception as e:
                                 print(str(e))
