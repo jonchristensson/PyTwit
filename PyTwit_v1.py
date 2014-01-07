@@ -35,15 +35,26 @@ c = conn.cursor()
 
 
 #drop specific table in Tweet.db
-c.execute("DROP TABLE IF EXISTS cox_tweet_test2")
+c.execute("DROP TABLE IF EXISTS cox_tweet_fact")
 
 # # Create table
-c.execute('''create table IF NOT EXISTS cox_tweet_test2
+c.execute('''create table IF NOT EXISTS cox_tweet_fact
 (
 time_key timestamp
 , User_ID integer
 , Nick_NM text
 , Tweet text
+)''')
+
+
+###### CREATE UPLOAD DB ####################
+c.execute("DROP TABLE IF EXISTS cox_tweet_load")
+
+# # Create table
+c.execute('''create table IF NOT EXISTS cox_tweet_load
+(
+create_dt timestamp
+, HowSim real
 )''')
 
 # c.execute("SELECT name FROM sqlite_master WHERE type='table';")
@@ -194,9 +205,13 @@ def main():
             #Use function to add data to DB
 
             for j in range(0,len(uniqueList)):
-            	c.execute('INSERT INTO cox_tweet_test2(time_key, User_ID, Nick_NM, Tweet) VALUES(? , ?, ?, ?)', (uniqueList[j][2],uniqueList[j][0], str(uniqueList[j][1]),uniqueList[j][3]))
+            	c.execute('INSERT INTO cox_tweet_fact(time_key, User_ID, Nick_NM, Tweet) VALUES(? , ?, ?, ?)', (uniqueList[j][2],uniqueList[j][0], str(uniqueList[j][1]),uniqueList[j][3]))
             	# Save (commit) the changes
             	conn.commit()
+
+            c.execute('INSERT INTO cox_tweet_load(create_dt, HowSim) VALUES(? , ?)', (create_dt, howSim))
+            conn.commit()
+
 
 
 			# c.execute("SELECT count(time_key) FROM Cox_tweet")
@@ -206,9 +221,13 @@ def main():
 			#c.execute("DROP TABLE IF EXISTS Cox_tweet")
 
 #############################################################################
-            c.execute("SELECT count(*) FROM cox_tweet_test2")
+            c.execute("SELECT count(*) FROM cox_tweet_fact")
             print(c.fetchall())
             print('length of unique list:',len(uniqueList))
+
+            c.execute("SELECT * FROM cox_tweet_load")
+            print(c.fetchall())
+
 
             OldlistOfListAppend=[]
 
